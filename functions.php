@@ -27,6 +27,13 @@ if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 	 * @return void
 	 */
 	function twenty_twenty_one_setup() {
+		/*
+		 * Make theme available for translation.
+		 * Translations can be filed in the /languages/ directory.
+		 * If you're building a theme based on Twenty Twenty-One, use a find and replace
+		 * to change 'twentytwentyone' to the name of your theme in all the template files.
+		 */
+		load_theme_textdomain( 'twentytwentyone', get_template_directory() . '/languages' );
 
 		// Add default posts and comments RSS feed links to head.
 		add_theme_support( 'automatic-feed-links' );
@@ -67,7 +74,8 @@ if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 		register_nav_menus(
 			array(
 				'primary' => esc_html__( 'Primary menu', 'twentytwentyone' ),
-				'footer'  => esc_html__( 'Secondary menu', 'twentytwentyone' ),
+				'homepage'  => __( 'Homepage links', 'twentytwentyone' ),
+				'footer'  => __( 'Secondary menu', 'twentytwentyone' ),
 			)
 		);
 
@@ -88,7 +96,7 @@ if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 			)
 		);
 
-		/*
+		/**
 		 * Add support for core custom logo.
 		 *
 		 * @link https://codex.wordpress.org/Theme_Logo
@@ -322,8 +330,8 @@ if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 		// Add support for custom line height controls.
 		add_theme_support( 'custom-line-height' );
 
-		// Add support for link color control.
-		add_theme_support( 'link-color' );
+		// Add support for experimental link color control.
+		add_theme_support( 'experimental-link-color' );
 
 		// Add support for experimental cover block spacing.
 		add_theme_support( 'custom-spacing' );
@@ -331,15 +339,12 @@ if ( ! function_exists( 'twenty_twenty_one_setup' ) ) {
 		// Add support for custom units.
 		// This was removed in WordPress 5.6 but is still required to properly support WP 5.5.
 		add_theme_support( 'custom-units' );
-
-		// Remove feed icon link from legacy RSS widget.
-		add_filter( 'rss_widget_feed_link', '__return_empty_string' );
 	}
 }
 add_action( 'after_setup_theme', 'twenty_twenty_one_setup' );
 
 /**
- * Registers widget area.
+ * Register widget area.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -351,20 +356,64 @@ function twenty_twenty_one_widgets_init() {
 
 	register_sidebar(
 		array(
-			'name'          => esc_html__( 'Footer', 'twentytwentyone' ),
-			'id'            => 'sidebar-1',
+			'name'          => esc_html__( 'Footer Widget 1', 'twentytwentyone' ),
+			'id'            => 'footer-widget-1',
 			'description'   => esc_html__( 'Add widgets here to appear in your footer.', 'twentytwentyone' ),
-			'before_widget' => '<section id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</section>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
+			'before_widget' => '<div id="%1$s" class="widget textwidget">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widgettitle">',
+			'after_title'   => '</h3>',
+		)
+	);
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Widget 2', 'twentytwentyone' ),
+			'id'            => 'footer-widget-2',
+			'description'   => esc_html__( 'Add widgets here to appear in your footer.', 'twentytwentyone' ),
+			'before_widget' => '<div id="%1$s" class="widget textwidget">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widgettitle">',
+			'after_title'   => '</h3>',
+		)
+	);
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Widget 3', 'twentytwentyone' ),
+			'id'            => 'footer-widget-3',
+			'description'   => esc_html__( 'Add widgets here to appear in your footer.', 'twentytwentyone' ),
+			'before_widget' => '<div id="%1$s" class="widget textwidget">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widgettitle">',
+			'after_title'   => '</h3>',
+		)
+	);
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Widget 4', 'twentytwentyone' ),
+			'id'            => 'footer-widget-4',
+			'description'   => esc_html__( 'Add widgets here to appear in your footer.', 'twentytwentyone' ),
+			'before_widget' => '<div id="%1$s" class="widget textwidget">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<h3 class="widgettitle">',
+			'after_title'   => '</h3>',
+		)
+	);
+	register_sidebar(
+		array(
+			'name'          => esc_html__( 'Footer Widget 5', 'twentytwentyone' ),
+			'id'            => 'footer-widget-5',
+			'description'   => esc_html__( 'Add widgets here to appear in your footer.', 'twentytwentyone' ),
+			'before_widget' => '<span class="footer-copy">',
+			'after_widget'  => '</span>',
+			'before_title'  => '<span>',
+			'after_title'   => '</span>',
 		)
 	);
 }
 add_action( 'widgets_init', 'twenty_twenty_one_widgets_init' );
 
 /**
- * Sets the content width in pixels, based on the theme's design and stylesheet.
+ * Set the content width in pixels, based on the theme's design and stylesheet.
  *
  * Priority 0 to make it available to lower priority callbacks.
  *
@@ -383,12 +432,9 @@ function twenty_twenty_one_content_width() {
 add_action( 'after_setup_theme', 'twenty_twenty_one_content_width', 0 );
 
 /**
- * Enqueues scripts and styles.
+ * Enqueue scripts and styles.
  *
  * @since Twenty Twenty-One 1.0
- *
- * @global bool       $is_IE
- * @global WP_Scripts $wp_scripts
  *
  * @return void
  */
@@ -421,7 +467,7 @@ function twenty_twenty_one_scripts() {
 		get_template_directory_uri() . '/assets/js/polyfills.js',
 		array(),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 
 	// Register the IE11 polyfill loader.
@@ -430,7 +476,7 @@ function twenty_twenty_one_scripts() {
 		null,
 		array(),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 	wp_add_inline_script(
 		'twenty-twenty-one-ie11-polyfills',
@@ -449,10 +495,7 @@ function twenty_twenty_one_scripts() {
 			get_template_directory_uri() . '/assets/js/primary-navigation.js',
 			array( 'twenty-twenty-one-ie11-polyfills' ),
 			wp_get_theme()->get( 'Version' ),
-			array(
-				'in_footer' => false, // Because involves header.
-				'strategy'  => 'defer',
-			)
+			true
 		);
 	}
 
@@ -462,13 +505,13 @@ function twenty_twenty_one_scripts() {
 		get_template_directory_uri() . '/assets/js/responsive-embeds.js',
 		array( 'twenty-twenty-one-ie11-polyfills' ),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 }
 add_action( 'wp_enqueue_scripts', 'twenty_twenty_one_scripts' );
 
 /**
- * Enqueues block editor script.
+ * Enqueue block editor script.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -476,19 +519,16 @@ add_action( 'wp_enqueue_scripts', 'twenty_twenty_one_scripts' );
  */
 function twentytwentyone_block_editor_script() {
 
-	wp_enqueue_script( 'twentytwentyone-editor', get_theme_file_uri( '/assets/js/editor.js' ), array( 'wp-blocks', 'wp-dom' ), wp_get_theme()->get( 'Version' ), array( 'in_footer' => true ) );
+	wp_enqueue_script( 'twentytwentyone-editor', get_theme_file_uri( '/assets/js/editor.js' ), array( 'wp-blocks', 'wp-dom' ), wp_get_theme()->get( 'Version' ), true );
 }
 
 add_action( 'enqueue_block_editor_assets', 'twentytwentyone_block_editor_script' );
 
 /**
- * Fixes skip link focus in IE11.
+ * Fix skip link focus in IE11.
  *
  * This does not enqueue the script because it is tiny and because it is only for IE11,
  * thus it does not warrant having an entire dedicated blocking script being loaded.
- *
- * @since Twenty Twenty-One 1.0
- * @deprecated Twenty Twenty-One 1.9 Removed from wp_print_footer_scripts action.
  *
  * @link https://git.io/vWdr2
  */
@@ -499,18 +539,18 @@ function twenty_twenty_one_skip_link_focus_fix() {
 		echo '<script>';
 		include get_template_directory() . '/assets/js/skip-link-focus-fix.js';
 		echo '</script>';
-	} else {
-		// The following is minified via `npx terser --compress --mangle -- assets/js/skip-link-focus-fix.js`.
-		?>
-		<script>
-		/(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",(function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())}),!1);
-		</script>
-		<?php
 	}
-}
 
-/**
- * Enqueues non-latin language styles.
+	// The following is minified via `npx terser --compress --mangle -- assets/js/skip-link-focus-fix.js`.
+	?>
+	<script>
+	/(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",(function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())}),!1);
+	</script>
+	<?php
+}
+add_action( 'wp_print_footer_scripts', 'twenty_twenty_one_skip_link_focus_fix' );
+
+/** Enqueue non-latin language styles
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -556,7 +596,7 @@ require_once get_template_directory() . '/classes/class-twenty-twenty-one-dark-m
 new Twenty_Twenty_One_Dark_Mode();
 
 /**
- * Enqueues scripts for the customizer preview.
+ * Enqueue scripts for the customizer preview.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -568,7 +608,7 @@ function twentytwentyone_customize_preview_init() {
 		get_theme_file_uri( '/assets/js/customize-helpers.js' ),
 		array(),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 
 	wp_enqueue_script(
@@ -576,13 +616,13 @@ function twentytwentyone_customize_preview_init() {
 		get_theme_file_uri( '/assets/js/customize-preview.js' ),
 		array( 'customize-preview', 'customize-selective-refresh', 'jquery', 'twentytwentyone-customize-helpers' ),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 }
 add_action( 'customize_preview_init', 'twentytwentyone_customize_preview_init' );
 
 /**
- * Enqueues scripts for the customizer.
+ * Enqueue scripts for the customizer.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -595,26 +635,19 @@ function twentytwentyone_customize_controls_enqueue_scripts() {
 		get_theme_file_uri( '/assets/js/customize-helpers.js' ),
 		array(),
 		wp_get_theme()->get( 'Version' ),
-		array( 'in_footer' => true )
+		true
 	);
 }
 add_action( 'customize_controls_enqueue_scripts', 'twentytwentyone_customize_controls_enqueue_scripts' );
 
 /**
- * Calculates classes for the main <html> element.
+ * Calculate classes for the main <html> element.
  *
  * @since Twenty Twenty-One 1.0
  *
  * @return void
  */
 function twentytwentyone_the_html_classes() {
-	/**
-	 * Filters the classes for the main <html> element.
-	 *
-	 * @since Twenty Twenty-One 1.0
-	 *
-	 * @param string The list of classes. Default empty string.
-	 */
 	$classes = apply_filters( 'twentytwentyone_html_classes', '' );
 	if ( ! $classes ) {
 		return;
@@ -623,7 +656,7 @@ function twentytwentyone_the_html_classes() {
 }
 
 /**
- * Adds "is-IE" class to body if the user is on Internet Explorer.
+ * Add "is-IE" class to body if the user is on Internet Explorer.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -639,17 +672,3 @@ function twentytwentyone_add_ie_class() {
 	<?php
 }
 add_action( 'wp_footer', 'twentytwentyone_add_ie_class' );
-
-if ( ! function_exists( 'wp_get_list_item_separator' ) ) :
-	/**
-	 * Retrieves the list item separator based on the locale.
-	 *
-	 * Added for backward compatibility to support pre-6.0.0 WordPress versions.
-	 *
-	 * @since 6.0.0
-	 */
-	function wp_get_list_item_separator() {
-		/* translators: Used between list items, there is a space after the comma. */
-		return __( ', ', 'twentytwentyone' );
-	}
-endif;

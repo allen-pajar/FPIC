@@ -1,15 +1,16 @@
 <?php
 /**
- * Template part for displaying posts
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * Template Name: FPIC360 Tool
+ * Template Post Type: page
  *
  * @package WordPress
- * @subpackage Twenty_Twenty_One
- * @since Twenty Twenty-One 1.0
+ * @subpackage Twenty_Twenty
+ * @since 1.0
  */
 
+get_header();
 ?>
+
 		<style type="text/css">
 			.cmsms_dynamic_cart .widget_shopping_cart_content .cart_list {
 				overflow-y:auto;
@@ -146,23 +147,38 @@
 						<h1 class="entry-title">
 							<?php the_title()?>
 						</h1>
+						<h5>
+							<?php the_field("page_subtitle"); ?>
+						</h5>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="middle_inner opened-article">
-			<div class="content_wrap r_sidebar">
+		<div class="content_wrap r_sidebar">
 			    		
-			<!-- _________________________ Start Sidebar _________________________ -->
-				<div class="sidebar fr" role="complementary">
-					<aside id="search-2" class="widget widget_search">
-					</aside>
-				</div>
-			<!-- _________________________ Finish Sidebar _________________________ -->
-									<!--_________________________ Start Content _________________________ -->
-									<div class="content fl entry" role="main">
-								<div class="blog opened-article">
-							<!--_________________________ Start Standard Article _________________________ -->
+							<!-- _________________________ Start Sidebar _________________________ -->
+								<div class="sidebar fr" role="complementary">
+								    
+<?php
+$post_list = get_posts( array(
+        'numberposts'      => 3,
+        'category_name'         => 'document',
+        'orderby'          => 'date',
+        'order'            => 'DESC'
+) );
+ 
+$posts = array();
+ 
+foreach ( $post_list as $post ) {
+   $posts[] += $post->ID;
+}
+ 
+$current = array_search( get_the_ID(), $posts );
+ 
+$prevID = $posts[ $current-1 ];
+$nextID = $posts[ $current+1 ];
+?>
 
 						<article class="cmsms_default_type post">
 
@@ -174,26 +190,77 @@
 											<div class="cmsms_column one_first">
 												<div id="cmsms_heading_5551a75f01776" class="cmsms_heading_wrap cmsms_heading_align_left">
 													<h3 class="cmsms_heading">
-													       <?php the_title(); ?>
+													       <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 													    </h3>
 												</div>
 												<div class="cmsms_text">
-													<?php the_content(); ?>
-																		<div class="cmsms_post_content entry-content"></div>
-													<?php 
-													       if (get_field('document_upload')) :
-													    ?>
-																		<footer class="cmsms_post_footer entry-meta">
-																			<a target="_blank" href="<?php echo $document_download; ?>" class="button cmsms_post_read_more" href="open-post.html" title="Download <?php the_title(); ?>">Download Document</a>
-																		</footer>
-													<?php endif ?>
+													<?php the_excerpt(); ?>
 												</div>
+												<div id="cmsms_divider_5551a75f0195f" class="cmsms_divider cmsms_divider_width_long cmsms_divider_pos_center"></div>
 											</div>
 										</div>
 									</div>
 								</div>
 								</article>
-						<!-- _________________________ Finish Content _________________________ -->
+								       <?php
+								       wp_reset_postdata(); ?>
+									<?php
+if( have_rows('faq_accordion') ):
+	$i = 1; // Set the increment variable
+	
+	echo '<div id="accordion">';
+ 	
+ 	// loop through the rows of data for the tab header
+    while ( have_rows('faq_accordion') ) : the_row();
+		
+
+	?>
+		
+		<div class="card">
+		    <div class="card-header" id="heading-<?php echo $i;?>">
+		      <h5 class="mb-0">
+		        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-<?php echo $i;?>" aria-expanded="true" aria-controls="collapse-<?php echo $i;?>">
+		          <?php the_sub_field('faq_accordion_header'); ?>
+		        </button>
+		      </h5>
+		    </div>
+		
+		    <div id="collapse-<?php echo $i;?>" class="collapse" aria-labelledby="heading-<?php echo $i;?>" data-parent="#accordion">
+		      <div class="card-body">
+		        <?php the_sub_field('faq_accordion_content') ?>
+		      </div>
+		    </div>
+		 </div>    
+		
+		
+	<?php $i++; // Increment the increment variable
+		
+	endwhile; //End the loop 
+	
+	echo '</div>';
+
+endif;?>
+								</div>
+
+							<!-- _________________________ Finish Sidebar _________________________ -->
+													<!--_________________________ Start Content _________________________ -->
+													<div class="content fl entry" role="main">
+												<div class="blog opened-article">
+											<!--_________________________ Start Standard Article _________________________ -->
+		    <div class="cmsms_post_content entry-content">
+				<div id="cmsms_row_5548a7b764a2f" class="cmsms_row cmsms_color_scheme_default">
+					<div class="cmsms_row_outer_parent">
+						<div class="cmsms_row_outer">
+							<div class="cmsms_row_inner">
+								<div class="cmsms_row_margin">
+									<div class="cmsms_column one_first">
+							<?php the_field("main_content"); ?>
+												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>			<!-- _________________________ Finish Content _________________________ -->
 		</div>
 	</section>
-
+<?php get_footer(); ?>
