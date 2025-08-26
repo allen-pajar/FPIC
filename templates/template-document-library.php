@@ -1,15 +1,16 @@
 <?php
 /**
- * Template part for displaying posts
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * Template Name: Document Library
+ * Template Post Type: page
  *
  * @package WordPress
- * @subpackage Twenty_Twenty_One
- * @since Twenty Twenty-One 1.0
+ * @subpackage Twenty_Twenty
+ * @since 1.0
  */
 
+get_header();
 ?>
+
 		<style type="text/css">
 			.cmsms_dynamic_cart .widget_shopping_cart_content .cart_list {
 				overflow-y:auto;
@@ -146,23 +147,43 @@
 						<h1 class="entry-title">
 							<?php the_title()?>
 						</h1>
+						<h5>
+							<?php the_field("page_subtitle"); ?>
+						</h5>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="middle_inner opened-article">
-			<div class="content_wrap r_sidebar">
+			<div class="content_wrap l_sidebar">
 			    		
 			<!-- _________________________ Start Sidebar _________________________ -->
-				<div class="sidebar fr" role="complementary">
+				<div class="sidebar fl" role="complementary">
 					<aside id="search-2" class="widget widget_search">
+						<?php get_search_form(); ?>
 					</aside>
 				</div>
 			<!-- _________________________ Finish Sidebar _________________________ -->
 									<!--_________________________ Start Content _________________________ -->
-									<div class="content fl entry" role="main">
+									<div class="content fr entry" role="main">
 								<div class="blog opened-article">
 							<!--_________________________ Start Standard Article _________________________ -->
+							<?php
+$args = array(
+    'post_type' => 'post',
+    'post_status' => 'publish',
+    'category_name' => 'document',
+    'posts_per_page' => -1,
+    'orderby'          => 'date',
+    'order'            => 'DESC'
+);
+$arr_posts = new WP_Query( $args );
+ 
+if ( $arr_posts->have_posts() ) :
+ 
+    while ( $arr_posts->have_posts() ) :
+        $arr_posts->the_post();
+?>
 
 						<article class="cmsms_default_type post">
 
@@ -180,20 +201,34 @@
 												<div class="cmsms_text">
 													<?php the_content(); ?>
 																		<div class="cmsms_post_content entry-content"></div>
-													<?php 
-													       if (get_field('document_upload')) :
-													    ?>
+																		
 																		<footer class="cmsms_post_footer entry-meta">
-																			<a target="_blank" href="<?php echo $document_download; ?>" class="button cmsms_post_read_more" href="open-post.html" title="Download <?php the_title(); ?>">Download Document</a>
+																		    
+													<?php 
+													      $document_download_eng = get_field('document_upload_eng');
+													      $document_download_spa = get_field('document_upload_spa');
+													    ?>
+																			<?php if ($document_download_eng) { ?>
+																			<a target="_blank" href="<?php echo $document_download_eng; ?>" class="button cmsms_post_read_more" href="open-post.html" title="Download <?php the_title(); ?>">Download Document (English)</a>
+																			<?php } 
+																			
+																			if ($document_download_spa) { ?>
+																			<a target="_blank" href="<?php echo $document_download_spa; ?>" class="button cmsms_post_read_more" href="open-post.html" title="Download <?php the_title(); ?>">Download Document (Spanish)</a>
+																		    <?php } ?>
 																		</footer>
-													<?php endif ?>
 												</div>
+												<div id="cmsms_divider_5551a75f0195f" class="cmsms_divider cmsms_divider_width_long cmsms_divider_pos_center"></div>
 											</div>
 										</div>
 									</div>
 								</div>
 								</article>
+								
+								<?php
+    endwhile;
+endif;
+?>
 						<!-- _________________________ Finish Content _________________________ -->
 		</div>
 	</section>
-
+<?php get_footer(); ?>
